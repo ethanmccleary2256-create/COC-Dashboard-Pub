@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
-import coc
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -9,10 +8,10 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5176", "http://localhost:5174", "http://localhost:5173", "http://localhost:3000","https://ethanmccleary2256-create.github.io/COC-Dashboard-Pub/"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["POST", "GET", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Global variables (populated on startup / login)
@@ -42,7 +41,10 @@ class LoginRequest(BaseModel):
     password: str
     clan_tag: str
 
+
+
 async def fetch_war_data():
+    import coc
     global ourStars, opponentStars, ourAttacksUsed, opponentAttacksUsed, ourDestruction, opponentDestruction, TotalStars, RemainingStars, ourName, opponentName, ourState, TotalAttacks, CWL
     # don't run if not logged in
     if not (stored_email and stored_password and stored_clan_tag):
@@ -99,8 +101,10 @@ async def background_refresh():
         await asyncio.sleep(60)
         await fetch_war_data()
 
-@app.api_route("/login", methods=["POST", "OPTIONS"])
-async def login(payload: LoginRequest):
+
+@app.post("/login")
+async def login(payload: LoginRequest | None = None):
+    import coc
     """
     Attempt to log in with provided credentials and clan_tag.
     On success store them and start the background refresh.
@@ -122,7 +126,7 @@ async def login(payload: LoginRequest):
     # start background task if not already running
     if background_task is None or background_task.done():
         background_task = asyncio.create_task(background_refresh())
-    return {"success": True, "clan_name": clan.name}
+    return {"success": True, }#"clan_name": clan.name}
 
 @app.get("/war_stats")
 def get_war_stats():
