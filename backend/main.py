@@ -99,7 +99,7 @@ async def background_refresh():
         await asyncio.sleep(60)
         await fetch_war_data()
 
-@app.post("/login")
+@app.route("/login", methods=["POST", "OPTIONS"])
 async def login(payload: LoginRequest):
     """
     Attempt to log in with provided credentials and clan_tag.
