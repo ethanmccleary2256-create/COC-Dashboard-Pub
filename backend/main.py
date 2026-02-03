@@ -9,10 +9,10 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5176", "http://localhost:5174", "http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5176", "http://localhost:5174", "http://localhost:5173", "http://localhost:3000","https://ethanmccleary2256-create.github.io/COC-Dashboard-Pub/"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["POST", "GET", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Global variables (populated on startup / login)
